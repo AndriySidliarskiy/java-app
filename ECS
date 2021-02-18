@@ -1,0 +1,36 @@
+#Jenkins Job for ECS 
+aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 551471454213.dkr.ecr.us-east-2.amazonaws.com;
+docker build -t java . ;
+docker tag java:latest 551471454213.dkr.ecr.us-east-2.amazonaws.com/java:latest;
+docker push 551471454213.dkr.ecr.us-east-2.amazonaws.com/java:latest;
+aws ecs update-service --cluster java2 --service java-app2 --force-new-deployment
+
+https://rtfm.co.ua/aws-sozdanie-elastic-container-registry-i-deploj-iz-jenkins/
+
+#jenkins pipeline ecs 
+node {
+    def app
+    stage('Clone repository') {
+        git branch: "master", url: "https://github.com/AndriySidliarskiy/java-app.git"
+    }
+    stage('Build maven') {
+        def mvnBuild = tool name: 'maven', type: 'maven'
+        sh "${mvnBuild}/bin/mvn clean install"
+    }
+    stage('Build image') {
+        sh "docker build --build-arg APP_NAME=receipts -t 551471454213.dkr.ecr.us-east-2.amazonaws.com/java:latest ."
+    }
+    stage('Push image') {
+        docker.withRegistry('https://551471454213.dkr.ecr.us-east-2.amazonaws.com', 'ecr:us-east-2:551471454213') {
+            sh "docker push 551471454213.dkr.ecr.us-east-2.amazonaws.com/java:latest"
+        }
+    }
+    stage('Update service') {
+            sh(script: """
+                        aws ecs update-service \
+                            --cluster java2 \
+                            --service java-app2 \
+                            --force-new-deployment \
+                    """)
+    }
+}
