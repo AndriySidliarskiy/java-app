@@ -51,3 +51,5 @@ docker login -u {username}  -p {password}
 After successful login, the config.json (~/.docker/config.json) file will be updated
 
 [![Build Status](http://ci.mpdev.haus.com/app/rest/builds/buildType:206/statusIcon)](http://teamcity/viewType.html?buildTypeId=myID&guest=1)
+<img src="http://ci.mpdev.haus.com/app/rest/builds/buildType:(id:Mg_Blockchain)/statusIcon"/>
+
