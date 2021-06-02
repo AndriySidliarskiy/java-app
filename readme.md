@@ -49,3 +49,5 @@ docker run -p 8080:8080 ankitpec72/docker-demo-service-jib:1.0-SNAPSHOT
 docker login -u {username}  -p {password}
 ```
 After successful login, the config.json (~/.docker/config.json) file will be updated
+
+[![Build Status](http://teamcity/app/rest/builds/buildType:(id:myID)/statusIcon)](http://teamcity/viewType.html?buildTypeId=myID&guest=1)
